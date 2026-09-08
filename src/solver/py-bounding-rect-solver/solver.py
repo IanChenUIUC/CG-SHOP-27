@@ -40,8 +40,7 @@ def solve(instance: CGSHOP2027Instance) -> CGSHOP2027Solution:
     lawn = Rect.enclosing(boundary.x, boundary.y)
     cutter = Rect.enclosing(instance.cutter.x, instance.cutter.y, instance.cutter_center)
 
-    x_start = lawn.left - cutter.right
-    x_end = lawn.right - cutter.left
+    x_start, x_end = lawn.left - cutter.right, lawn.right - cutter.left
     strip_count = max(ceil(lawn.height / cutter.height), instance.number_of_cutters)
     anchor_rows = [lawn.top - cutter.top - i * cutter.height for i in range(strip_count)]
 
@@ -59,6 +58,4 @@ def solve(instance: CGSHOP2027Instance) -> CGSHOP2027Solution:
 def tour(anchor_rows: list[int], x_start: int, x_end: int) -> CutterTour:
     points = list(unique_justseen(flatten(
                   ((x_start, y), (x_end, y), (x_start, y)) for y in anchor_rows)))
-    if len(points) > 1 and points[-1] == points[0]:
-        points.pop()
     return CutterTour(x=[x for x, _ in points], y=[y for _, y in points])
